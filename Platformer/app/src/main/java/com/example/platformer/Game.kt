@@ -35,7 +35,7 @@ class Game(context: Context) : SurfaceView(context), Runnable ,SurfaceHolder.Cal
     val paint=Paint()
 
     val transform=Matrix()
-    val position=Point()
+    val position=PointF()
 
     fun worldToScreenX(worldDistance:Float)= camera.worldToScreenX(worldDistance)
     fun worldToScreenY(worldDistance:Float)= camera.worldToScreenY(worldDistance)

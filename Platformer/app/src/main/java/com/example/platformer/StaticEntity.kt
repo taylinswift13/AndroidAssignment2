@@ -17,8 +17,8 @@ class StaticEntity(sprite:String,x:Float,y:Float):Entity(){
         bitmap=BitmapUtils.loadScaledBitmap(
             engine.context,
             sprite,
-            widthInPixels,
-            heightInPixels
+            widthInPixels.toInt(),
+            heightInPixels.toInt()
         )
     }
 
