@@ -9,10 +9,7 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import kotlin.random.Random
 
-const val STAGE_WIDTH=1080
-const val STAGE_HEIGHT=720
-const val pixelsPerMeters=50
-const val METERS_TO_SHOW_X=20F
+const val METERS_TO_SHOW_X=16F
 const val METERS_TO_SHOW_Y=0F
 val RNG= Random(uptimeMillis())
 lateinit var engine:Game
@@ -33,16 +30,17 @@ class Game(context: Context) : SurfaceView(context), Runnable ,SurfaceHolder.Cal
     @Volatile
     private var isRunning=false
     private var isGameOver=false
+    val camera=Viewport(stageWidth,stageHeight, METERS_TO_SHOW_X, METERS_TO_SHOW_Y)
     private var levelManager=LevelManager(TestLevel())
     val paint=Paint()
-    val camera=Viewport(stageWidth,stageHeight, METERS_TO_SHOW_X, METERS_TO_SHOW_Y)
+
     val transform=Matrix()
     val position=Point()
 
-    fun worldToScreenX(worldDistance:Float)=(worldDistance*pixelsPerMeters).toInt()
-    fun worldToScreenY(worldDistance:Float)=(worldDistance*pixelsPerMeters).toInt()
-    fun screenToWorldX(pixelDistance:Float)=(pixelDistance/pixelsPerMeters).toFloat()
-    fun screenToWorldY(pixelDistance:Float)=(pixelDistance/pixelsPerMeters).toFloat()
+    fun worldToScreenX(worldDistance:Float)= camera.worldToScreenX(worldDistance)
+    fun worldToScreenY(worldDistance:Float)= camera.worldToScreenY(worldDistance)
+    //fun screenToWorldX(pixelDistance:Float)=(pixelDistance/ pixelsPerMeters).toFloat()
+    //fun screenToWorldY(pixelDistance:Float)=(pixelDistance/ pixelsPerMeters).toFloat()
 
     fun getScreenHeight()=context.resources.displayMetrics.heightPixels
     fun getScreenWidth()=context.resources.displayMetrics.widthPixels
