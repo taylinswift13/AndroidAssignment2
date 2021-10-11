@@ -4,7 +4,6 @@ import android.graphics.Point
 import android.graphics.PointF
 import android.graphics.RectF
 
-private const val OVERDRAW_BUFFER = 1f //draw this many meters beyond the viewport edges, to avoid visual gaps at the edge of the screen.
 class Viewport(
     val screenWidth: Int,
     val screenHeight: Int,
@@ -17,7 +16,7 @@ class Viewport(
 
     init {
         setMetersToShow(metersToShowX, metersToShowY)
-        lookAt(0f,0f)
+        lookAt(2f,0f)
     }
 
     //setMetersToShow calculates the number of physical pixels per meters

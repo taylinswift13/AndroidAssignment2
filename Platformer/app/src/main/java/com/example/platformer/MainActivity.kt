@@ -11,13 +11,14 @@ import androidx.core.view.WindowCompat
 
 class MainActivity : AppCompatActivity() {
     private val tag="GameActivity"
+
     private lateinit var game:Game
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
-        game= Game(this)
-        setContentView(game)
-        Log.d(tag,"onCreate called")
+        setContentView(R.layout.activity_main)
+        game = findViewById<Game>(R.id.game)
+        val input = TouchController(findViewById(R.id.touch_controller))
+        game.setControls(input)
     }
 
     override fun onPause() {

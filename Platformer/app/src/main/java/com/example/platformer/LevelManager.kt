@@ -2,9 +2,11 @@ package com.example.platformer
 
 
 class LevelManager(level:LevelData) {
-    var entities=ArrayList<Entity>()
-    var entitiesToAdd=ArrayList<Entity>()
-    var entitiesToRemove=ArrayList<Entity>()
+    var levelHeight=0
+    lateinit var player: Player
+    val entities=ArrayList<Entity>()
+    val entitiesToAdd=ArrayList<Entity>()
+    val entitiesToRemove=ArrayList<Entity>()
     init {
         loadAssets(level)
     }
@@ -12,11 +14,22 @@ class LevelManager(level:LevelData) {
         for(e in entities){
             e.update(dt)
         }
-        //check collisions
+        doCollisionChecks()
         addAndRemoveEntities()
     }
+
+    private fun doCollisionChecks() {
+        for(e in entities){
+            if(e == player){continue}
+            if(isColliding(player,e)){
+                player.onCollision(e)
+                e.onCollision(player)
+            }
+        }
+    }
+
     private fun loadAssets(level: LevelData){
-        val levelHeight=level.getHeight()
+        levelHeight=level.getHeight()
         for (y in 0 until levelHeight){
             val row=level.getRow(y)
             for(x in row.indices){
@@ -29,12 +42,12 @@ class LevelManager(level:LevelData) {
         addAndRemoveEntities()
     }
     private fun createEntity(spriteName: String, x:Int, y:Int){
-        addEntity(StaticEntity(spriteName,x.toFloat(),y.toFloat()))
         if(spriteName.equals(PLAYER,ignoreCase = true)){
-
+            player = Player(spriteName,x.toFloat(),y.toFloat())
+            addEntity(player)
         }
         else{
-
+            addEntity(StaticEntity(spriteName,x.toFloat(),y.toFloat()))
         }
     }
     private fun addEntity(e:Entity){
