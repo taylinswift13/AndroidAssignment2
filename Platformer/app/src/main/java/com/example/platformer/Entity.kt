@@ -5,46 +5,60 @@ import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.PointF
 import android.util.Log
-    abstract class Entity() {
-        private val TAG = "Entity"
-        var x = 0f
-        var y = 0f
-        var width = 0f
-        var height = 0f
 
-        init{
-            Log.d(TAG, "Entity created")
-        }
+const val TYPE_UNDEFINED = -1
+const val TYPE_COIN = 0
+const val TYPE_TILE = 1
+const val TYPE_ENEMY = 2
+const val TYPE_PLAYER = 3
 
-        open fun update(dt:Float) {}
-        open fun render(canvas: Canvas, transform:Matrix,paint: Paint) {}
-        open fun onCollision(that: Entity) {} //notify the Entity about collisions
-        open fun destroy() {}
+abstract class Entity {
+    private val TAG = "Entity"
+    var x = 0f
+    var y = 0f
+    var width = 0f
+    var height = 0f
+    var type = TYPE_UNDEFINED
 
-        fun left() = x
-        fun right() = x + width
-        fun top() = y
-        fun bottom() = y + height
-        fun centerX() = x + (width * 0.5f)
-        fun centerY() = y + (height * 0.5f)
-
-        fun setLeft(leftEdgePosition: Float) {
-            x = leftEdgePosition
-        }
-        fun setRight(rightEdgePosition: Float) {
-            x = rightEdgePosition - width
-        }
-        fun setTop(topEdgePosition: Float) {
-            y = topEdgePosition
-        }
-        fun setBottom(bottomEdgePosition: Float) {
-            y = bottomEdgePosition - height
-        }
-        fun setCenter(x: Float, y: Float) {
-            this.x = x - width * 0.5f
-            this.y = y - height * 0.5f
-        }
+    init {
+        Log.d(TAG, "Entity created")
     }
+
+    open fun update(dt: Float) {}
+    open fun render(canvas: Canvas, transform: Matrix, paint: Paint) {}
+    open fun onCollision(that: Entity) {} //notify the Entity about collisions
+    open fun destroy() {}
+    open fun getEntityType() = type
+
+    fun left() = x
+    fun right() = x + width
+    fun top() = y
+    fun bottom() = y + height
+    fun centerX() = x + (width * 0.5f)
+    fun centerY() = y + (height * 0.5f)
+
+    fun setLeft(leftEdgePosition: Float) {
+        x = leftEdgePosition
+    }
+
+    fun setRight(rightEdgePosition: Float) {
+        x = rightEdgePosition - width
+    }
+
+    fun setTop(topEdgePosition: Float) {
+        y = topEdgePosition
+    }
+
+    fun setBottom(bottomEdgePosition: Float) {
+        y = bottomEdgePosition - height
+    }
+
+    fun setCenter(x: Float, y: Float) {
+        this.x = x - width * 0.5f
+        this.y = y - height * 0.5f
+    }
+
+}
 
 //a basic axis-aligned bounding box intersection test.
 //https://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection

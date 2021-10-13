@@ -36,7 +36,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
     val camera=Viewport(stageWidth,stageHeight, METERS_TO_SHOW_X, METERS_TO_SHOW_Y)
     val pool = BitmapPool(this)
     private var levelManager=LevelManager(TestLevel())
-
+    private val jukebox = Jukebox(context.assets)
     val paint=Paint()
     val transform=Matrix()
     val position=PointF()
@@ -60,6 +60,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
             update(deltaTime)
             buildVisibleSet()
             render(visibleEntities)
+            //jukebox.play(SFX.BGM)
         }
     }
     private fun buildVisibleSet(){
@@ -74,6 +75,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
     private fun update(deltaTime:Float) {
         levelManager.update( deltaTime)
         camera.lookAt(levelManager.player)
+        //jukebox.play(SFX.BGM)
     }
 
     private fun render(visibleSet:ArrayList<Entity>) {
@@ -86,6 +88,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
             transform.postTranslate(position.x.toFloat(),position.y.toFloat())
             e.render(canvas,transform, paint)
         }
+        renderHud(canvas,paint)
         holder.unlockCanvasAndPost(canvas)
     }
 
@@ -130,5 +133,23 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
         inputs = input
         inputs.onResume()
         inputs.onStart()
+    }
+    private fun renderHud(canvas: Canvas, paint: Paint) {
+        val textSize=48f
+        val margin =10f
+        paint.textAlign=Paint.Align.LEFT
+        paint.textSize=textSize
+        if(!isGameOver){
+            canvas.drawText("Health:${levelManager.player.health}",margin,textSize,paint)
+            //canvas.drawText("Distance:${distanceTraveled}",margin,textSize*2,paint)
+        }
+        /*else{
+            val centerX= STAGE_WIDTH*0.5f
+            val centerY= STAGE_HEIGHT*0.5f
+            paint.textAlign=Paint.Align.CENTER
+            canvas.drawText("GAME OVER!",centerX,centerY,paint)
+            canvas.drawText("(press to restart)",centerX,centerY+textSize,paint)
+        }*/
+
     }
 }

@@ -16,7 +16,7 @@ class Viewport(
 
     init {
         setMetersToShow(metersToShowX, metersToShowY)
-        lookAt(2f,0f)
+        lookAt(5f,0f)
     }
 
     //setMetersToShow calculates the number of physical pixels per meters

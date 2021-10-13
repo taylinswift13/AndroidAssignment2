@@ -4,6 +4,8 @@ package com.example.platformer
 class LevelManager(level:LevelData) {
     var levelHeight=0
     lateinit var player: Player
+    lateinit var coin:Coins
+    lateinit var enemy: Enemy
     val entities=ArrayList<Entity>()
     val entitiesToAdd=ArrayList<Entity>()
     val entitiesToRemove=ArrayList<Entity>()
@@ -20,12 +22,29 @@ class LevelManager(level:LevelData) {
 
     private fun doCollisionChecks() {
         for(e in entities){
-            if(e == player){continue}
+            if(e == player){
+                continue
+            }
             if(isColliding(player,e)){
-                player.onCollision(e)
+                when(e.getEntityType()){
+                    TYPE_COIN -> {
+                        destroyEntity(e)
+                        removeEntity(e)
+                    }
+                    TYPE_ENEMY-> {
+                        destroyEntity(e)
+                        player.loseHealth()
+                    }
+                    else -> player.onCollision(e)
+                }
                 e.onCollision(player)
             }
         }
+    }
+
+    private fun destroyEntity(e:Entity){
+        e.destroy()
+        removeEntity(e)
     }
 
     private fun loadAssets(level: LevelData){
@@ -45,6 +64,14 @@ class LevelManager(level:LevelData) {
         if(spriteName.equals(PLAYER,ignoreCase = true)){
             player = Player(spriteName,x.toFloat(),y.toFloat())
             addEntity(player)
+        }
+        else if(spriteName.equals(COIN,ignoreCase = true)){
+            coin = Coins(spriteName,x.toFloat(),y.toFloat())
+            addEntity(coin)
+        }
+        else if(spriteName.equals(ENEMY,ignoreCase = true)){
+            enemy = Enemy(spriteName,x.toFloat(),y.toFloat())
+            addEntity(enemy)
         }
         else{
             addEntity(StaticEntity(spriteName,x.toFloat(),y.toFloat()))
