@@ -1,24 +1,46 @@
 package com.example.platformer
 
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+import android.widget.Button
 import androidx.core.view.WindowCompat
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.InputStream
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),IGameInterface {
     private val tag="GameActivity"
-
+    private val handler = Handler(Looper.getMainLooper())
     private lateinit var game:Game
+    private val mediaPlayer = MediaPlayer()
+    private val bgmCachePath by lazy {
+        filesDir.absolutePath + File.separator + "cache.mp3"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         game = findViewById<Game>(R.id.game)
         val input = TouchController(findViewById(R.id.touch_controller))
         game.setControls(input)
+
+        if(!File(bgmCachePath).exists()){
+            assets.open("BGM.mp3").copy()
+        }
+        mediaPlayer.setDataSource(bgmCachePath)
+        mediaPlayer.setOnPreparedListener {
+            it.start()
+        }
+        mediaPlayer.isLooping = true
+        mediaPlayer.prepareAsync()
     }
 
     override fun onPause() {
@@ -67,4 +89,34 @@ class MainActivity : AppCompatActivity() {
             window?.insetsController?.hide(flag)
         }
     }
+
+    override fun onGameOver() {
+        val btn = findViewById<Button>(R.id.btn_game)
+        btn.post {
+            btn.visibility = View.VISIBLE
+        }
+        btn.setOnClickListener {
+            btn.visibility = View.GONE
+            onGameRestart()
+        }
+
+    }
+
+    private fun onGameRestart() {
+
+    }
+
+
+    private fun InputStream.copy():String?{
+        return runCatching {
+            this.use {
+                FileOutputStream(bgmCachePath).use { output->
+                    output.write(it.readBytes())
+                }
+            }
+            bgmCachePath
+        }.getOrNull()
+
+    }
+
 }

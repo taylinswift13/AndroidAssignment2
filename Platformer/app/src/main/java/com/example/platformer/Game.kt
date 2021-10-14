@@ -37,7 +37,13 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
     val pool = BitmapPool(this)
     private var levelManager=LevelManager(TestLevel())
     private val jukebox = Jukebox(context.assets)
-    val paint=Paint()
+    private val paint by lazy {
+        val paint = Paint()
+        paint.isDither = true
+        paint.color = Color.RED
+        paint.isAntiAlias = true
+        paint
+    }
     val transform=Matrix()
     val position=PointF()
     var inputs = InputManager()
@@ -75,6 +81,9 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
     private fun update(deltaTime:Float) {
         levelManager.update( deltaTime)
         camera.lookAt(levelManager.player)
+        if(levelManager.player.health==0){
+            isGameOver=true
+        }
         //jukebox.play(SFX.BGM)
     }
 
@@ -89,6 +98,7 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
             e.render(canvas,transform, paint)
         }
         renderHud(canvas,paint)
+
         holder.unlockCanvasAndPost(canvas)
     }
 
@@ -135,21 +145,20 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
         inputs.onStart()
     }
     private fun renderHud(canvas: Canvas, paint: Paint) {
-        val textSize=48f
-        val margin =10f
+        val textSize = 10f
+        val margin = 10f
         paint.textAlign=Paint.Align.LEFT
         paint.textSize=textSize
-        if(!isGameOver){
+
+        if(isGameOver){
+            val context = context
+            if(context is IGameInterface){
+                context.onGameOver()
+            }
+        } else{
             canvas.drawText("Health:${levelManager.player.health}",margin,textSize,paint)
-            //canvas.drawText("Distance:${distanceTraveled}",margin,textSize*2,paint)
+            canvas.drawText("Score:${levelManager.coin.coins}/5",margin,textSize*2,paint)
         }
-        /*else{
-            val centerX= STAGE_WIDTH*0.5f
-            val centerY= STAGE_HEIGHT*0.5f
-            paint.textAlign=Paint.Align.CENTER
-            canvas.drawText("GAME OVER!",centerX,centerY,paint)
-            canvas.drawText("(press to restart)",centerX,centerY+textSize,paint)
-        }*/
 
     }
 }

@@ -28,6 +28,7 @@ class LevelManager(level:LevelData) {
             if(isColliding(player,e)){
                 when(e.getEntityType()){
                     TYPE_COIN -> {
+                        coin.gainCoin()
                         destroyEntity(e)
                         removeEntity(e)
                     }

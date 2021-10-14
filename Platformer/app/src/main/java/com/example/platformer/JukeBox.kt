@@ -34,14 +34,6 @@ class Jukebox(private val assetManager: AssetManager) {
                 isFirstInitialize = false
             }
         }
-
-        SFX.BGM = loadSound("BGM.mp3")
-
-
-
-
-
-
     }
 
     private fun loadSound(fileName: String): Int{

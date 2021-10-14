@@ -52,9 +52,7 @@ class Player(spriteName: String, xpos: Float, ypos: Float) : DynamicEntity(sprit
         super.onCollision(that)
     }
 
-    fun gainCoin(){
-        destroy()
-    }
+
     fun loseHealth(){
         CommonUtil.printLog(msg = "loseHealth")
         health--

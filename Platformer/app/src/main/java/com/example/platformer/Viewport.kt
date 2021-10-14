@@ -1,8 +1,6 @@
 package com.example.platformer
 
-import android.graphics.Point
 import android.graphics.PointF
-import android.graphics.RectF
 
 class Viewport(
     val screenWidth: Int,
@@ -11,12 +9,12 @@ class Viewport(
     metersToShowY: Float) :Entity(){
     private var pixelsPerMeterX = 0f
     private var pixelsPerMeterY = 0f
-    private val screenCenterX = screenWidth / 2
-    private val screenCenterY = screenHeight / 2
+     private val screenCenterX = screenWidth / 2
+     private val screenCenterY = screenHeight / 2
 
     init {
         setMetersToShow(metersToShowX, metersToShowY)
-        lookAt(5f,0f)
+        lookAt(10f,0f)
     }
 
     //setMetersToShow calculates the number of physical pixels per meters
