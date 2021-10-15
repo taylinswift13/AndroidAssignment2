@@ -1,7 +1,10 @@
 package com.example.platformer
 
+import android.content.Context
 
-class LevelManager(level:LevelData) {
+
+class LevelManager(val level: LevelData, context: Context) {
+    private val jukebox = Jukebox(context.assets)
     var levelHeight=0
     lateinit var player: Player
     lateinit var coin:Coins
@@ -31,10 +34,12 @@ class LevelManager(level:LevelData) {
                         coin.gainCoin()
                         destroyEntity(e)
                         removeEntity(e)
+                        jukebox.play(SFX.coin)
                     }
                     TYPE_ENEMY-> {
                         destroyEntity(e)
                         player.loseHealth()
+                        jukebox.play(SFX.hurt)
                     }
                     else -> player.onCollision(e)
                 }
@@ -81,7 +86,7 @@ class LevelManager(level:LevelData) {
     private fun addEntity(e:Entity){
         entitiesToAdd.add(e)
     }
-    fun removeEntity(e:Entity){
+    private fun removeEntity(e:Entity){
         entitiesToRemove.add(e)
     }
     private fun addAndRemoveEntities(){
@@ -94,8 +99,7 @@ class LevelManager(level:LevelData) {
         entitiesToRemove.clear()
         entitiesToAdd.clear()
     }
-    private fun cleanup(){
-        addAndRemoveEntities()
+    fun cleanup(){
         for(e in entities){
             e.destroy()
         }
@@ -105,6 +109,10 @@ class LevelManager(level:LevelData) {
         cleanup()
     }
 
+    fun onGameRestart() {
+        loadAssets(level)
+        player.revive()
+    }
 
 
 }

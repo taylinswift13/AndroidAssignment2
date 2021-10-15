@@ -58,5 +58,9 @@ class Player(spriteName: String, xpos: Float, ypos: Float) : DynamicEntity(sprit
         health--
     }
 
+    fun revive() {
+        health = PLAYER_STARTING_HEALTH
+    }
+
 
 }

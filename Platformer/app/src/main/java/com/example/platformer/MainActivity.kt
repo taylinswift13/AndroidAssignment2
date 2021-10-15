@@ -8,9 +8,11 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowInsets
 import android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 import android.widget.Button
+import android.widget.FrameLayout
 import androidx.core.view.WindowCompat
 import java.io.File
 import java.io.FileInputStream
@@ -28,7 +30,7 @@ class MainActivity : AppCompatActivity(),IGameInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        game = findViewById<Game>(R.id.game)
+        game = findViewById(R.id.game)
         val input = TouchController(findViewById(R.id.touch_controller))
         game.setControls(input)
 
@@ -103,7 +105,7 @@ class MainActivity : AppCompatActivity(),IGameInterface {
     }
 
     private fun onGameRestart() {
-
+        game.onGameRestart()
     }
 
 

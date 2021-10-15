@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import android.widget.Button
 import kotlin.random.Random
 
 const val METERS_TO_SHOW_X=16F
@@ -19,7 +20,7 @@ lateinit var engine:Game
 
 
 class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context, attrs), Runnable, SurfaceHolder.Callback {
-
+    private val jukebox = Jukebox(context.assets)
     private val tag="Game"
     private val stageHeight=getScreenHeight()/2
     private val stageWidth=getScreenWidth()/2
@@ -35,8 +36,8 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
     private var isGameOver=false
     val camera=Viewport(stageWidth,stageHeight, METERS_TO_SHOW_X, METERS_TO_SHOW_Y)
     val pool = BitmapPool(this)
-    private var levelManager=LevelManager(TestLevel())
-    private val jukebox = Jukebox(context.assets)
+    private var levelManager=LevelManager(TestLevel(context),context)
+
     private val paint by lazy {
         val paint = Paint()
         paint.isDither = true
@@ -79,10 +80,11 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
     }
 
     private fun update(deltaTime:Float) {
-        levelManager.update( deltaTime)
+        levelManager.update(deltaTime)
         camera.lookAt(levelManager.player)
-        if(levelManager.player.health==0){
-            isGameOver=true
+        if (levelManager.player.health == 0 && !isGameOver) {
+            jukebox.play(SFX.die)
+            isGameOver = true
         }
         //jukebox.play(SFX.BGM)
     }
@@ -145,12 +147,13 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
         inputs.onStart()
     }
     private fun renderHud(canvas: Canvas, paint: Paint) {
-        val textSize = 10f
+        val textSize = 40f
         val margin = 10f
         paint.textAlign=Paint.Align.LEFT
         paint.textSize=textSize
 
         if(isGameOver){
+            levelManager.cleanup()
             val context = context
             if(context is IGameInterface){
                 context.onGameOver()
@@ -160,5 +163,10 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
             canvas.drawText("Score:${levelManager.coin.coins}/5",margin,textSize*2,paint)
         }
 
+    }
+
+    fun onGameRestart() {
+        isGameOver = false
+        levelManager.onGameRestart()
     }
 }

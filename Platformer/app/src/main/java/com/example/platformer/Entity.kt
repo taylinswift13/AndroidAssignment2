@@ -63,7 +63,7 @@ abstract class Entity {
 //a basic axis-aligned bounding box intersection test.
 //https://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection
 fun isColliding(a: Entity, b: Entity): Boolean {
-    return !(a.right() <= b.left() || b.right() <= a.left() || a.bottom() <= b.top() || b.bottom() <= a.top())
+    return !(a.right() < b.left() || b.right() < a.left() || a.bottom() < b.top() || b.bottom() < a.top())
 }
 
 //a more refined AABB intersection test

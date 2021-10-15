@@ -8,9 +8,10 @@ import android.util.Log
 import java.io.IOException
 
 object SFX{
-    var BGM = 0
+    var coin = 0
     var start = 0
     var die =0
+    var hurt = 0
 }
 const val MAX_STREAMS = 3
 var isFirstInitialize = true
@@ -34,6 +35,9 @@ class Jukebox(private val assetManager: AssetManager) {
                 isFirstInitialize = false
             }
         }
+        SFX.coin = loadSound("Coin.wav")
+        SFX.hurt = loadSound("Hurt.wav")
+        SFX.start = loadSound(("start.wav"))
     }
 
     private fun loadSound(fileName: String): Int{

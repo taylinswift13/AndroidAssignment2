@@ -1,5 +1,6 @@
 package com.example.platformer
 
+import android.content.Context
 import android.util.SparseArray
 
 internal const val PLAYER="yellow_left1"
@@ -8,7 +9,7 @@ internal const val ENEMY="spearsup_brown"
 internal const val NULLSPRITE= "nullsprite"
 internal const val NO_TILE=0
 
-abstract class LevelData {
+abstract class LevelData(context: Context) {
     var tiles:  Array<IntArray> = emptyArray()
     val tileToBitmap=SparseArray<String>()
 
