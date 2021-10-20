@@ -152,17 +152,28 @@ class Game(context: Context, attrs: AttributeSet? = null) : SurfaceView(context,
         paint.textAlign=Paint.Align.LEFT
         paint.textSize=textSize
 
-        if(isGameOver){
+        if(isGameOver)
+        {
             levelManager.cleanup()
             val context = context
-            if(context is IGameInterface){
+            if(context is IGameInterface)
+            {
                 context.onGameOver()
             }
-        } else{
+        }
+        else if(levelManager.coin.coins==5)
+        {
+            levelManager.cleanup()
+            val context = context
+            if(context is IGameInterface)
+            {
+                context.onGameWin()
+            }
+        }
+        else{
             canvas.drawText("Health:${levelManager.player.health}",margin,textSize,paint)
             canvas.drawText("Score:${levelManager.coin.coins}/5",margin,textSize*2,paint)
         }
-
     }
 
     fun onGameRestart() {

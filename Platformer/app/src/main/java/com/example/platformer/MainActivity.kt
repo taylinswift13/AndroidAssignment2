@@ -93,7 +93,18 @@ class MainActivity : AppCompatActivity(),IGameInterface {
     }
 
     override fun onGameOver() {
-        val btn = findViewById<Button>(R.id.btn_game)
+        val btn = findViewById<Button>(R.id.btn_end)
+        btn.post {
+            btn.visibility = View.VISIBLE
+        }
+        btn.setOnClickListener {
+            btn.visibility = View.GONE
+            onGameRestart()
+        }
+
+    }
+    override fun onGameWin() {
+        val btn = findViewById<Button>(R.id.btn_win)
         btn.post {
             btn.visibility = View.VISIBLE
         }

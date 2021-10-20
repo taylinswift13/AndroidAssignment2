@@ -6,11 +6,13 @@ import android.graphics.Paint
 import android.util.Log
 
 const val PLAYER_RUN_SPEED = 6.0f //meters per second
-val PLAYER_JUMP_FORCE: Float = -(GRAVITY / 2f) //whatever feels good!
+val PLAYER_JUMP_FORCE: Float = -(GRAVITY / 2.5f) //whatever feels good!
 val LEFT = 1.0F
 val RIGHT = -1.0F
 const val PLAYER_STARTING_HEALTH=3
 class Player(spriteName: String, xpos: Float, ypos: Float) : DynamicEntity(spriteName, xpos, ypos) {
+    var isInvincible=false
+    var AtTime=0
     var health= PLAYER_STARTING_HEALTH
     val TAG = "Player"
     var facing = LEFT
@@ -26,6 +28,14 @@ class Player(spriteName: String, xpos: Float, ypos: Float) : DynamicEntity(sprit
         if (controls._isJumping && isOnGround) {
             velY = PLAYER_JUMP_FORCE
             isOnGround = false
+        }
+        if(isInvincible){
+
+            AtTime++
+            if(AtTime>=50){
+                isInvincible=false
+                AtTime=0
+            }
         }
         super.update(dt) //parent will integrate our velocity and time with our position
     }
@@ -54,6 +64,7 @@ class Player(spriteName: String, xpos: Float, ypos: Float) : DynamicEntity(sprit
 
 
     fun loseHealth(){
+        isInvincible=true
         CommonUtil.printLog(msg = "loseHealth")
         health--
     }

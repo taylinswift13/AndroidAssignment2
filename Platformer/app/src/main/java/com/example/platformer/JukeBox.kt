@@ -38,6 +38,7 @@ class Jukebox(private val assetManager: AssetManager) {
         SFX.coin = loadSound("Coin.wav")
         SFX.hurt = loadSound("Hurt.wav")
         SFX.start = loadSound(("start.wav"))
+        SFX.die = loadSound("die.wav")
     }
 
     private fun loadSound(fileName: String): Int{

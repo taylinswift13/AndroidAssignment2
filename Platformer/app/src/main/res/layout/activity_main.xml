@@ -16,7 +16,14 @@
         android:visibility="gone"
         android:layout_gravity="center"
         android:text="Game Over"
-        android:id="@+id/btn_game"
+        android:id="@+id/btn_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:text="Game Win"
+        android:id="@+id/btn_win"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 

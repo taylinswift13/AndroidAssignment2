@@ -38,8 +38,9 @@ class LevelManager(val level: LevelData, context: Context) {
                     }
                     TYPE_ENEMY-> {
                         destroyEntity(e)
-                        player.loseHealth()
-                        jukebox.play(SFX.hurt)
+                        if(player.isInvincible==false)
+                        {player.loseHealth()
+                        jukebox.play(SFX.hurt)}
                     }
                     else -> player.onCollision(e)
                 }
