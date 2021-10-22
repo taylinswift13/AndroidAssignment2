@@ -24,6 +24,8 @@ class MainActivity : AppCompatActivity(),IGameInterface {
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var game:Game
     private val mediaPlayer = MediaPlayer()
+    private var isContextResume = true
+    private var mediaPlayerReady = false
     private val bgmCachePath by lazy {
         filesDir.absolutePath + File.separator + "cache.mp3"
     }
@@ -39,7 +41,10 @@ class MainActivity : AppCompatActivity(),IGameInterface {
         }
         mediaPlayer.setDataSource(bgmCachePath)
         mediaPlayer.setOnPreparedListener {
-            it.start()
+            mediaPlayerReady = true
+            if(isContextResume){
+                it.start()
+            }
         }
         mediaPlayer.isLooping = true
         mediaPlayer.prepareAsync()
@@ -47,12 +52,24 @@ class MainActivity : AppCompatActivity(),IGameInterface {
 
     override fun onPause() {
         game.pause()
+        mediaPlayer.pause()
+        isContextResume = false
         super.onPause()
     }
 
     override fun onResume() {
         super.onResume()
         game.resume()
+        isContextResume = true
+        if(mediaPlayerReady){
+           mediaPlayer.start()
+        }
+    }
+
+    override fun onDestroy() {
+        mediaPlayer.pause()
+        mediaPlayer.release()
+        super.onDestroy()
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
